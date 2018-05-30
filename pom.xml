@@ -193,60 +193,60 @@
         <plugins>
 
             <!--操作数据库插件-->
-            <plugin>
-                <groupId>com.googlecode</groupId>
-                <artifactId>maven-db-plugin</artifactId>
-                <version>1.4</version>
-                <configuration>
+            <!--<plugin>-->
+                <!--<groupId>com.googlecode</groupId>-->
+                <!--<artifactId>maven-db-plugin</artifactId>-->
+                <!--<version>1.4</version>-->
+                <!--<configuration>-->
 
-                    <adminDbConnectionSettings>
-                        <jdbcDriver>${p.connection.driver_class}</jdbcDriver>
-                        <jdbcUrl>${p.connection.admin.url}</jdbcUrl>
-                        <userName>${p.connection.username}</userName>
-                        <password>${p.connection.password}</password>
-                    </adminDbConnectionSettings>
+                    <!--<adminDbConnectionSettings>-->
+                        <!--<jdbcDriver>${p.connection.driver_class}</jdbcDriver>-->
+                        <!--<jdbcUrl>${p.connection.admin.url}</jdbcUrl>-->
+                        <!--<userName>${p.connection.username}</userName>-->
+                        <!--<password>${p.connection.password}</password>-->
+                    <!--</adminDbConnectionSettings>-->
 
-                    <appDbConnectionSettings>
-                        <jdbcDriver>${p.connection.driver_class}</jdbcDriver>
-                        <jdbcUrl>${p.connection.url}</jdbcUrl>
-                        <userName>${p.connection.username}</userName>
-                        <password>${p.connection.password}</password>
-                    </appDbConnectionSettings>
+                    <!--<appDbConnectionSettings>-->
+                        <!--<jdbcDriver>${p.connection.driver_class}</jdbcDriver>-->
+                        <!--<jdbcUrl>${p.connection.url}</jdbcUrl>-->
+                        <!--<userName>${p.connection.username}</userName>-->
+                        <!--<password>${p.connection.password}</password>-->
+                    <!--</appDbConnectionSettings>-->
 
-                    <!-- mvn db:data 执行相关数据-->
-                    <dbDataScriptsDirectory>
-                        <param>src/main/sql/data</param>
-                    </dbDataScriptsDirectory>
+                    <!--&lt;!&ndash; mvn db:data 执行相关数据&ndash;&gt;-->
+                    <!--<dbDataScriptsDirectory>-->
+                        <!--<param>src/main/sql/data</param>-->
+                    <!--</dbDataScriptsDirectory>-->
 
-                    <!-- mvn db:schema 创建表结构-->
-                    <dbSchemaScriptsDirectory>
-                        <param>src/main/sql/schema</param>
-                    </dbSchemaScriptsDirectory>
+                    <!--&lt;!&ndash; mvn db:schema 创建表结构&ndash;&gt;-->
+                    <!--<dbSchemaScriptsDirectory>-->
+                        <!--<param>src/main/sql/schema</param>-->
+                    <!--</dbSchemaScriptsDirectory>-->
 
-                    <dbUpdateScriptsDirectory>
-                        <param>src/main/sql/update</param>
-                    </dbUpdateScriptsDirectory>
+                    <!--<dbUpdateScriptsDirectory>-->
+                        <!--<param>src/main/sql/update</param>-->
+                    <!--</dbUpdateScriptsDirectory>-->
 
-                    <dbDropStatements>
-                        drop database ${p.db.name};
-                    </dbDropStatements>
+                    <!--<dbDropStatements>-->
+                        <!--drop database ${p.db.name};-->
+                    <!--</dbDropStatements>-->
 
-                    <!-- mvn db:create 创建 database -->
-                    <dbCreateStatements>
-                        create database ${p.db.name} CHARACTER SET 'utf8';
-                    </dbCreateStatements>
+                    <!--&lt;!&ndash; mvn db:create 创建 database &ndash;&gt;-->
+                    <!--<dbCreateStatements>-->
+                        <!--create database ${p.db.name} CHARACTER SET 'utf8';-->
+                    <!--</dbCreateStatements>-->
 
-                    <sqlDelimiter>;;</sqlDelimiter>
-                    <scriptEncoding>UTF-8</scriptEncoding>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>mysql</groupId>
-                        <artifactId>mysql-connector-java</artifactId>
-                        <version>${mysql-version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
+                    <!--<sqlDelimiter>;;</sqlDelimiter>-->
+                    <!--<scriptEncoding>UTF-8</scriptEncoding>-->
+                <!--</configuration>-->
+                <!--<dependencies>-->
+                    <!--<dependency>-->
+                        <!--<groupId>mysql</groupId>-->
+                        <!--<artifactId>mysql-connector-java</artifactId>-->
+                        <!--<version>${mysql-version}</version>-->
+                    <!--</dependency>-->
+                <!--</dependencies>-->
+            <!--</plugin>-->
 
             <!-- mybatis 代码生成器-->
             <plugin>
@@ -312,7 +312,7 @@
                     <![CDATA[jdbc:mysql://localhost:3306/${p.db.name}?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8]]>
                 </p.connection.url>
                 <p.connection.username>root</p.connection.username>
-                <p.connection.password>123456</p.connection.password>
+                <p.connection.password>root</p.connection.password>
 
             </properties>
         </profile>

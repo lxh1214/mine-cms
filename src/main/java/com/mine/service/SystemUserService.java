@@ -1,5 +1,6 @@
 package com.mine.service;
 
+import com.github.pagehelper.Page;
 import com.mine.model.SystemUser;
 import com.mine.model.SystemUserExample;
 
@@ -23,4 +24,6 @@ public interface SystemUserService {
 
     SystemUser updateSystemUser(SystemUser systemUser, SystemUserExample systemUserExample);
 
+    Page<SystemUser> pageBySystemUserExample(Integer pageNum, Integer pageSize,
+                                             final SystemUserExample systemUserExample);
 }

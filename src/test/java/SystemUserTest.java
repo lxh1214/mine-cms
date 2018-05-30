@@ -1,3 +1,4 @@
+import com.github.pagehelper.Page;
 import com.mine.model.SystemUser;
 import com.mine.model.SystemUserExample;
 import com.mine.service.SystemUserService;
@@ -34,17 +35,18 @@ public class SystemUserTest extends BasicTest{
 //        systemUser.setMobilePhoneNumber("13170700404");
 //        systemUser.setDeleted(false);
 //        systemUser.setUsername("admin");
-//
-//        SystemUser systemUser1 = new SystemUser();
-//        systemUser1.setAdmin(true);
-//        systemUser1.setCreateDate(new Date());
-//        systemUser1.setEmail("lxh1@lvmama.com");
-//        systemUser1.setMobilePhoneNumber("13170700401");
-//        systemUser1.setDeleted(false);
-//        systemUser1.setUsername("admin1");
-
-
 //        service.saveSystemUser(systemUser);
+//        for(int i=10; i<20; i++) {
+//            SystemUser systemUser1 = new SystemUser();
+//            systemUser1.setAdmin(true);
+//            systemUser1.setCreateDate(new Date());
+//            systemUser1.setEmail("lxh"+i+"@lvmama.com");
+//            systemUser1.setMobilePhoneNumber("1317070040"+i);
+//            systemUser1.setDeleted(false);
+//            systemUser1.setUsername("admin"+i);
+//            service.saveSystemUser(systemUser1);
+//        }
+
 //        logger.info("systemUser " + systemUser.getId());
     }
 
@@ -62,6 +64,17 @@ public class SystemUserTest extends BasicTest{
         logger.info("list size " + list.size());
 
         Assert.assertEquals(list.size(), 1);
+
+    }
+
+    @Test
+    public void pageSystemUserTest() {
+        SystemUserExample systemUserExample = new SystemUserExample();
+        Page<SystemUser> page = service.pageBySystemUserExample(1, 10, systemUserExample);
+        logger.info("total " + page.getTotal() + "," + "pages:" + page.getPages());
+
+        logger.info("page :"+page);
+
 
     }
 

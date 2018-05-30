@@ -1,5 +1,8 @@
 package com.mine.service.impl;
 
+import com.github.pagehelper.ISelect;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.mine.dao.SystemUserMapper;
 import com.mine.model.SystemUser;
 import com.mine.model.SystemUserExample;
@@ -38,6 +41,23 @@ public class SystemUserServiceImpl implements SystemUserService {
         return systemUserMapper.selectByExample(systemUserExample);
     }
 
+    /**
+     *  通过分页插件
+     * @param pageNum 当前页数
+     * @param pageSize 每页大小
+     * @param systemUserExample
+     * @return
+     */
+    public Page<SystemUser> pageBySystemUserExample(Integer pageNum, Integer pageSize, final SystemUserExample systemUserExample) {
+
+        return PageHelper.startPage(pageNum, pageSize).doSelectPage(new ISelect() {
+            public void doSelect() {
+                systemUserMapper.selectByExample(systemUserExample);
+            }
+        });
+
+    }
+
 
     public int deleteSystemUser(SystemUserExample systemUserExample) {
         return systemUserMapper.deleteByExample(systemUserExample);
@@ -47,4 +67,6 @@ public class SystemUserServiceImpl implements SystemUserService {
         systemUserMapper.updateByExampleSelective(systemUser, systemUserExample);
         return systemUser;
     }
+
+
 }
