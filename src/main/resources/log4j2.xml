@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/>
+        </Console>
+    </Appenders>
+
+
+    <Loggers>
+        <!--<Logger name="org.apache.log4j.xml" level="info"/>-->
+        <!--<Logger name="com.mine.dao" level="trace" />-->
+
+        <Logger name="com.mine.dao.SystemUserMapper" level="TRACE" additivity="false">       //为dao mapper所在的包，level为TRACE
+            <AppenderRef ref="STDOUT"/>
+        </Logger>
+
+        <Root level="info">
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+    </Loggers>
+</Configuration>

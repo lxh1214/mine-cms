@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %-5p [%t] %C{2} (%F:%L) - %m%n"/>
+        </Console>
+    </Appenders>
+
+    <Loggers>
+        <!--<Logger name="org.apache.log4j.xml" level="info"/>-->
+
+        <!--输出 mapper 对应的 sql 语句-->
+        <!--<Logger name="com.mine.dao" level="trace" />-->
+
+        <!--<Logger name="com.mine.dao.SystemUserMapper" level="DEBUG" >      -->
+            <!--<AppenderRef ref="STDOUT"/>-->
+        <!--</Logger>-->
+
+        <Logger name="druid.sql" level="DEBUG" >
+            <AppenderRef ref="STDOUT"/>
+        </Logger>
+
+        <!--<Logger name="druid.sql" level="DEBUG" >     -->
+            <!--<AppenderRef ref="STDOUT"/>-->
+        <!--</Logger>-->
+        <!--<Logger name="druid.sql.DataSource" level="DEBUG" >     -->
+            <!--<AppenderRef ref="STDOUT"/>-->
+        <!--</Logger>-->
+        <!--<Logger name="druid.sql.Connection" level="DEBUG" >     -->
+            <!--<AppenderRef ref="STDOUT"/>-->
+        <!--</Logger>  -->
+        <!---->
+        <!--<Logger name="druid.sql.Statement" level="DEBUG" >     -->
+            <!--<AppenderRef ref="STDOUT"/>-->
+        <!--</Logger>-->
+
+        <!--<Logger name="druid.sql.ResultSet" level="DEBUG" >     -->
+            <!--<AppenderRef ref="STDOUT"/>-->
+        <!--</Logger>-->
+     
+
+        <Root level="INFO">
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+    </Loggers>
+</Configuration>
