@@ -48,9 +48,7 @@ http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
         <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
 
         <!-- 配置监控统计拦截的filters -->
-        <!--<property name="filters" value="stat" />-->
 
-        <!--<property name="filters" value="stat,log4j2" />-->
         <property name="filters" value="stat" />
 
         <property name="proxyFilters">
@@ -60,23 +58,32 @@ http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
         </property>
     </bean>
 
-    <bean id="log-filter" class="com.alibaba.druid.filter.logging.Log4j2Filter">
-        <!--<property name="resultSetLogEnabled" value="false" />-->
-        <property name="statementExecutableSqlLogEnable" value="true" />
-        <property name="dataSourceLogEnabled" value="false" />
-        <property name="connectionLogEnabled" value="false" />
-        <property name="connectionLogErrorEnabled" value="false" />
-        <property name="statementLogEnabled" value="false" />
-        <property name="statementLogErrorEnabled" value="false" />
+    <bean id="log-filter" class="com.alibaba.druid.filter.logging.Slf4jLogFilter">
+        <property name="connectionLogEnabled" value="false"/>
+        <property name="statementLogEnabled" value="false"/>
+        <property name="resultSetLogEnabled" value="false"/>
+        <property name="statementExecutableSqlLogEnable" value="true"/>
     </bean>
 
 
+    <bean id="wall-filter-config" class="com.alibaba.druid.wall.WallConfig" init-method="init">
+        <property name="selectLimit" value="5" />
+
+        <!-- 指定配置装载的目录  -->
+        <property name="dir" value="META-INF/druid/wall/mysql" />
+
+    </bean>
+
+    <bean id="wall-filter" class="com.alibaba.druid.wall.WallFilter">
+        <property name="dbType" value="mysql" />
+        <property name="config" ref="wall-filter-config" />
+    </bean>
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 
         <property name="dataSource" ref="dataSource" />
 
-        <!--<property name="configLocation" value="classpath:mybatis-config.xml" />-->
+        <property name="configLocation" value="classpath:mybatis-config.xml" />
 
         <property name="mapperLocations" value="classpath:com/mine/mapping/*.xml"/>
 

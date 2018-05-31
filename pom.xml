@@ -312,7 +312,7 @@
                     <![CDATA[jdbc:mysql://localhost:3306/${p.db.name}?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8]]>
                 </p.connection.url>
                 <p.connection.username>root</p.connection.username>
-                <p.connection.password>root</p.connection.password>
+                <p.connection.password>123456</p.connection.password>
 
             </properties>
         </profile>

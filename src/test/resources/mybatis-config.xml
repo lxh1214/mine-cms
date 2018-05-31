@@ -15,7 +15,8 @@
         <!--<setting name="autoMappingUnknownColumnBehavior" value="WARNING"/>-->
         <!--<setting name="defaultExecutorType" value="SIMPLE"/>-->
         <!--<setting name="defaultStatementTimeout" value="25"/>-->
-        <setting name="defaultFetchSize" value="100"/>
+        <!--没起作用-->
+        <setting name="defaultFetchSize" value="5"/>
         <!--<setting name="safeRowBoundsEnabled" value="false"/>-->
         <!--<setting name="mapUnderscoreToCamelCase" value="false"/>-->
         <!--<setting name="localCacheScope" value="SESSION"/>-->

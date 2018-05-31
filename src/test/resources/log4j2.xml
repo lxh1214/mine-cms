@@ -12,32 +12,33 @@
         <!--输出 mapper 对应的 sql 语句-->
         <!--<Logger name="com.mine.dao" level="trace" />-->
 
+
+
+        <!-- druid配置 -->
+        <!-- 这里的输出日志 如果配置了 druid log-filter的话 log-filter 配置还会过滤一遍 -->
+        <logger name="druid.sql.Statement" level="debug" additivity="false">
+            <appender-ref ref="STDOUT"/>
+        </logger>
+        <logger name="druid.sql.ResultSet" level="debug" additivity="false">
+            <appender-ref ref="STDOUT"/>
+        </logger>
+
         <!--<Logger name="com.mine.dao.SystemUserMapper" level="DEBUG" >      -->
-            <!--<AppenderRef ref="STDOUT"/>-->
+        <!--<AppenderRef ref="STDOUT"/>-->
         <!--</Logger>-->
 
-        <Logger name="druid.sql" level="DEBUG" >
-            <AppenderRef ref="STDOUT"/>
-        </Logger>
-
-        <!--<Logger name="druid.sql" level="DEBUG" >     -->
-            <!--<AppenderRef ref="STDOUT"/>-->
+        <!--<Logger name="druid.sql" level="DEBUG" >-->
+        <!--<AppenderRef ref="STDOUT"/>-->
         <!--</Logger>-->
         <!--<Logger name="druid.sql.DataSource" level="DEBUG" >     -->
-            <!--<AppenderRef ref="STDOUT"/>-->
+        <!--<AppenderRef ref="STDOUT"/>-->
         <!--</Logger>-->
         <!--<Logger name="druid.sql.Connection" level="DEBUG" >     -->
-            <!--<AppenderRef ref="STDOUT"/>-->
+        <!--<AppenderRef ref="STDOUT"/>-->
         <!--</Logger>  -->
-        <!---->
-        <!--<Logger name="druid.sql.Statement" level="DEBUG" >     -->
-            <!--<AppenderRef ref="STDOUT"/>-->
-        <!--</Logger>-->
 
-        <!--<Logger name="druid.sql.ResultSet" level="DEBUG" >     -->
-            <!--<AppenderRef ref="STDOUT"/>-->
-        <!--</Logger>-->
-     
+
+
 
         <Root level="INFO">
             <AppenderRef ref="STDOUT"/>
