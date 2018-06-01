@@ -18,6 +18,9 @@ public class SystemUser implements Serializable {
 
     private Date createDate;
 
+    /***
+     *
+     */
     private String status;
 
     private Boolean deleted;
@@ -104,6 +107,10 @@ public class SystemUser implements Serializable {
 
     public void setAdmin(Boolean admin) {
         this.admin = admin;
+    }
+
+    public String getCredentialsSalt() {
+        return username + salt;
     }
 
     @Override

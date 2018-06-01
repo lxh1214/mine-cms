@@ -30,6 +30,31 @@ public class SystemUserServiceImpl implements SystemUserService {
         return systemUserMapper.selectByPrimaryKey(userId);
     }
 
+    /**
+     * username 是唯一的
+     * @param userName
+     * @return
+     */
+    public SystemUser recieveByUserName(String userName) {
+
+        if(userName == null || userName.trim().equals("")) {
+            return null;
+        }
+
+        SystemUserExample systemUserExample = new SystemUserExample();
+
+        systemUserExample.createCriteria().andUsernameEqualTo(userName);
+
+        List<SystemUser> users = systemUserMapper.selectByExample(systemUserExample);
+
+        if(users != null && users.size() == 1) {
+            return users.get(0);
+        }
+        // todo 数据错误
+        return null;
+
+    }
+
     public SystemUser saveSystemUser(SystemUser systemUser) {
         logger.info("save systemUser start : " + systemUser);
         systemUserMapper.insertSelective(systemUser);

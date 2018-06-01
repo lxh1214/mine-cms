@@ -26,4 +26,6 @@ public interface SystemUserService {
 
     Page<SystemUser> pageBySystemUserExample(Integer pageNum, Integer pageSize,
                                              final SystemUserExample systemUserExample);
+
+    SystemUser recieveByUserName(String userName);
 }
