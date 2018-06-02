@@ -1,8 +1,10 @@
 import com.github.pagehelper.Page;
+import com.mine.core.ShiroTool;
 import com.mine.model.SystemUser;
 import com.mine.model.SystemUserExample;
 import com.mine.service.SystemUserService;
 import com.mine.test.BasicTest;
+import org.apache.shiro.SecurityUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -48,6 +50,19 @@ public class SystemUserTest extends BasicTest{
 //        }
 
 //        logger.info("systemUser " + systemUser.getId());
+    }
+
+    @Test
+    public void generatorEntryptUserTest() {
+
+        SystemUser systemUser = new SystemUser();
+
+        systemUser.setUsername("lxh");
+        systemUser.setSalt(ShiroTool.getRandomSlat());
+        systemUser.setPassword(ShiroTool.md5Encrypt("1214", systemUser.getSalt()));
+        service.saveSystemUser(systemUser);
+
+
     }
 
     @Test

@@ -13,7 +13,6 @@ import java.util.List;
 
 public interface SystemUserService {
 
-
     SystemUser getSystemUser(Long userId);
 
     SystemUser saveSystemUser(SystemUser systemUser);
@@ -28,4 +27,6 @@ public interface SystemUserService {
                                              final SystemUserExample systemUserExample);
 
     SystemUser recieveByUserName(String userName);
+
+
 }
