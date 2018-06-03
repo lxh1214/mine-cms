@@ -46,8 +46,6 @@
     </servlet-mapping>
 
 
-
-
     <!-- Web Application Character Encoding UTF-8 -->
     <filter>
         <filter-name>characterEncodingFilter</filter-name>
