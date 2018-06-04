@@ -4,3 +4,5 @@
 mybatis, spring, spring mvc, log4j2, druid, shiro 
 项目脚手架
 ace http://ace.jeka.by
+
+https://www.ibm.com/developerworks/cn/opensource/os-cn-spring-cache/
