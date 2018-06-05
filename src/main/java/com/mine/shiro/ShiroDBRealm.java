@@ -72,4 +72,30 @@ public class ShiroDBRealm extends AuthorizingRealm {
         super.setCredentialsMatcher(md5CredentialsMatcher);
     }
 
+
+    /**
+     * 登出后 需要清除缓存
+     * 要不然 密码修改后 就不生效
+     *
+     * 默认是清除缓存
+     * @param principals
+     */
+    @Override
+    public void clearCachedAuthenticationInfo(PrincipalCollection principals) {
+        super.clearCachedAuthenticationInfo(principals);
+    }
+
+    /**
+     * 清除权限 缓存
+     * @param principals
+     */
+    @Override
+    public void clearCachedAuthorizationInfo(PrincipalCollection principals) {
+        super.clearCachedAuthorizationInfo(principals);
+    }
+
+    @Override
+    public void clearCache(PrincipalCollection principals) {
+        super.clearCache(principals);
+    }
 }

@@ -31,10 +31,17 @@
            statistics="true">
     </cache>
 
+    <!--
+    timeToIdleSeconds,
+    timeToLiveSeconds
+    以最小且非零的为准
+     timeToIdleSeconds="3600"
+    -->
     <cache name="shiro-activeSessionCache"
            maxEntriesLocalHeap="2000"
            eternal="false"
-           timeToIdleSeconds="3600"
+
+           timeToIdleSeconds="60"
            timeToLiveSeconds="0"
            overflowToDisk="false"
            statistics="true">

@@ -14,7 +14,7 @@
         <property name="loginUrl" value="/login"/>
 
         <!-- 登陆成功后的一面 -->
-        <property name="successUrl" value="/home"/>
+        <property name="successUrl" value="/"/>
 
         <property name="unauthorizedUrl" value="/login"/>
 
@@ -28,25 +28,88 @@
           -->
         <property name="filterChainDefinitions">
             <!--除了登录页面 其他的都需要 用户校验 -->
+            <!--
+            authc filter 必须要通过身份认证,
+            user filter 是通过身份认真或者rememberMe都可以
+
+            authc , user 应用场景就不一直了 在某些特殊要求的操作一定需要 身份认证的 就不能用 user
+            -->
+
             <value>
+                /favicon.ico = anon
                 /statics/**=anon
                 /login=authc
                 /logout = logout
                 /**=user
-
             </value>
         </property>
     </bean>
 
-    <!-- 配置缓存管理器 -->
-    <!--<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">-->
-        <!--&lt;!&ndash; 指定 ehcache 的配置文件 &ndash;&gt;-->
-        <!--<property name="cacheManagerConfigFile" value="classpath:ehcache-shiro.xml"/>-->
-    <!--</bean>-->
+    <!-- 会话Cookie模板 -->
+    <!-- sessionId cookie 关闭浏览器 过期-->
+    <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="sid"/>
+        <property name="httpOnly" value="true"/>
+        <property name="maxAge" value="-1"/>
+    </bean>
+
+
+    <!--rememberMe cookie 30天过期-->
+    <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="rememberMe"/>
+        <property name="httpOnly" value="true"/>
+        <property name="maxAge" value="2592000"/><!-- 30天 -->
+    </bean>
+
+    <!-- rememberMe管理器 -->
+    <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+        <!--加密key-->
+        <!--<property name="cipherKey" value="-->
+<!--#{T(org.apache.shiro.codec.Base64).decode('bWluZS1jbXMAAAAAAAAAAABBBBBB==')}"/>-->
+
+        <property name="cookie" ref="rememberMeCookie"/>
+    </bean>
+
 
     <!-- 缓存管理器 使用Ehcache实现 -->
     <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <!-- 指定 ehcache 的配置文件 -->
         <property name="cacheManagerConfigFile" value="classpath:spring/ehcache-shiro.xml"/>
+    </bean>
+
+    <bean id="mySessionListener" class="com.mine.shiro.session.listener.MySessionListener" />
+
+    <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO" >
+        <!--对应ehCache name="shiro-activeSessionCache"-->
+        <property name="activeSessionsCacheName" value="shiro-activeSessionCache" />
+
+        <!-- sessionId 生成器 -->
+        <property name="sessionIdGenerator" >
+            <bean class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator" />
+        </property>
+
+    </bean>
+
+    <!--mysql session 存储的实现-->
+    <bean id="mySqlSessionDAO" class="com.mine.shiro.session.MySqlSessionDao" >
+        <!--对应ehCache name="shiro-activeSessionCache"-->
+        <property name="activeSessionsCacheName" value="shiro-activeSessionCache" />
+
+        <!-- sessionId 生成器 -->
+        <property name="sessionIdGenerator" >
+            <bean class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator" />
+        </property>
+    </bean>
+
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <property name="sessionIdCookie" ref="sessionIdCookie" />
+        <property name="sessionIdCookieEnabled" value="true" />
+        <property name="sessionListeners">
+            <list>
+                <ref bean="mySessionListener" />
+            </list>
+        </property>
+        <property name="sessionDAO" ref="mySqlSessionDAO"/>
     </bean>
 
 
@@ -58,13 +121,22 @@
         <property name="storedCredentialsHexEncoded" value="true"/>
     </bean>
 
-    <!-- 配置进行授权和认证的 Realm -->
+    <!--
+     配置进行授权和认证的 Realm
+     Realm 继承 AuthorizingRealm
+     AuthorizingRealm 柔和了 相关缓存的功能
+    -->
     <bean id="myRealm" class="com.mine.shiro.ShiroDBRealm">
         <!--<property name="systemUserService" ref="systemUserService"></property>-->
         <property name="credentialsMatcher" ref="credentialsMatcher"/>
+        <!--是否开启缓存-->
         <property name="cachingEnabled" value="true"/>
+        <!--身份验证缓存是否开启-->
         <property name="authenticationCachingEnabled" value="true"/>
+        <!--缓存对应的 名称  key, value(ConcurrentHashMap)-->
+        <!--value="authenticationCache" 与 ehCache 应该一致-->
         <property name="authenticationCacheName" value="authenticationCache"/>
+        <!--权限验证缓存是否开启-->
         <property name="authorizationCachingEnabled" value="true"/>
         <property name="authorizationCacheName" value="authorizationCache"/>
 
@@ -78,9 +150,27 @@
                 <ref bean="myRealm" />
             </list>
         </property>
+
+        <!--
+            加入缓存机制
+        -->
         <property name="cacheManager" ref="cacheManager"/>
 
+        <property name="sessionManager" ref="sessionManager" />
+
+        <property name="rememberMeManager" ref="rememberMeManager" />
+
     </bean>
+
+
+    <!--authc filter 设置 rememberParam 名称 如果保持 默认的 可以不设置-->
+    <bean id="formAuthenticationFilter" class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
+        <property name="usernameParam" value="username"/>
+        <property name="passwordParam" value="password"/>
+        <property name="rememberMeParam" value="rememberMe"/>
+
+    </bean>
+
 
     <!-- 相当于调用SecurityUtils.setSecurityManager(securityManager) -->
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">

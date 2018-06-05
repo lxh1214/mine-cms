@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Created by angle on 2018/6/1.
  */
 @Controller
-@RequestMapping(name = "/umgr")
+@RequestMapping("/umgr")
 public class UserMgrController {
 
     @RequestMapping("/hello")

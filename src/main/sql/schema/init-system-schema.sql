@@ -14,6 +14,11 @@ drop table if exists `sys_role_resource_permission`;;
 drop table if exists `sys_group`;;
 drop table if exists `sys_group_relation`;;
 
+drop table if exists sessions;;
+
+
+
+
 ##user
 create table `sys_user`(
   `id`         bigint not null auto_increment,
@@ -213,6 +218,14 @@ create table `sys_group_relation`(
   index `idx_sys_group_relation_start_user_id` (`start_user_id`),
   index `idx_sys_group_relation_end_user_id` (`end_user_id`)
 ) charset=utf8 ENGINE=InnoDB;;
+
+# 存放会话session
+
+create table sessions (
+  id varchar(200),
+  session varchar(2000),
+  constraint pk_sessions primary key(id)
+) charset=utf8 ENGINE=InnoDB;
 
 
 

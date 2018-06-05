@@ -66,6 +66,15 @@ public class SystemUserTest extends BasicTest{
     }
 
     @Test
+    public void changeUserTest() {
+        SystemUser systemUser = service.recieveByUserName("lxh");
+        SystemUserExample systemUserExample = new SystemUserExample();
+        systemUserExample.createCriteria().andUsernameEqualTo("lxh");
+        systemUser.setPassword(ShiroTool.md5Encrypt("lxh", systemUser.getSalt()));
+        service.updateSystemUser(systemUser, systemUserExample);
+    }
+
+    @Test
     public void findSystemUserTest() {
        // service.getSystemUser(0L);
         SystemUserExample systemUserExample = new SystemUserExample();
