@@ -6,3 +6,5 @@ mybatis, spring, spring mvc, log4j2, druid, shiro
 ace http://ace.jeka.by
 
 https://www.ibm.com/developerworks/cn/opensource/os-cn-spring-cache/
+
+http://www.urielkatz.com/archive/detail/memcached-64-bit-windows/

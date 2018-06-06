@@ -22,10 +22,11 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
            <property name="locations">
                   <list>
                          <value>classpath:jdbc.properties</value>
+                         <value>classpath:memcached.properties</value>
                   </list>
            </property>
     </bean>
 
     <import resource="database.xml" />
-
+    <import resource="memcached-client.xml" />
 </beans>
