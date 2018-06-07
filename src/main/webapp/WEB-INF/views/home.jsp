@@ -36,7 +36,7 @@
 		<!-- inline styles related to this page -->
 
 		<!-- ace settings handler -->
-		<script async="" src="statics/js/analytics.js"></script>
+		<%--<script async="" src="statics/js/analytics.js"></script>--%>
 		<script type="text/javascript" async="" src="statics/js/watch.js">
 
 		</script><script src="statics/js/ace-extra.min.js"></script>

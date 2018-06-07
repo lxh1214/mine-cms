@@ -1,5 +1,6 @@
 package com.mine.shiro.session;
 
+import com.mine.core.Servlets;
 import com.mine.dao.SystemSessionMapper;
 import com.mine.model.SystemSession;
 import org.apache.shiro.session.Session;
@@ -23,17 +24,36 @@ public class MySqlSessionDao extends CachingSessionDAO {
     @Autowired
     SystemSessionMapper systemSessionMapper;
 
+    /**
+     * 排除的更新 session Url
+     */
+    private String[] excludeUrls;
+
+
+    public void setExcludeUrls(String[] excludeUrls) {
+        this.excludeUrls = excludeUrls;
+    }
+
     protected void doUpdate(Session session) {
+
         logger.info("doUpdate start.");
+
         // 过期后不更新
         if(session instanceof ValidatingSession && !((ValidatingSession) session).isValid()) {
             return;
         }
 
-        Serializable sessionId = this.generateSessionId(session);
-        assignSessionId(session, sessionId);
+        String uri = Servlets.getRequest().getRequestURI().toLowerCase();
+
+        for (String str : excludeUrls) {
+            if (uri.toLowerCase().matches(str.toLowerCase().trim())) {
+                logger.trace("doUpdate session excludeUrl:"+ str + " matches sucess! ");
+                return;
+            }
+        }
+
         SystemSession systemSession = new SystemSession();
-        systemSession.setId(sessionId.toString());
+        systemSession.setId(session.getId().toString());
         systemSession.setSession(SerializableUtils.serialize(session));
 
         systemSessionMapper.updateByPrimaryKey(systemSession);
@@ -50,14 +70,14 @@ public class MySqlSessionDao extends CachingSessionDAO {
     protected Serializable doCreate(Session session) {
         logger.info("doCreate start.");
         Serializable sessionId = this.generateSessionId(session);
-        logger.info("sessionId  " + sessionId);
+        logger.info("doCreate sessionId  " + sessionId);
         assignSessionId(session, sessionId);
         SystemSession systemSession = new SystemSession();
         systemSession.setId(sessionId.toString());
         systemSession.setSession(SerializableUtils.serialize(session));
         systemSessionMapper.insert(systemSession);
-        logger.info("session :" + session);
-        logger.info("systemSession :" + systemSession);
+        logger.info("doCreate session :" + session);
+        logger.info("doCreate systemSession :" + systemSession);
         logger.info("doCreate end.");
         return sessionId;
     }
@@ -66,7 +86,7 @@ public class MySqlSessionDao extends CachingSessionDAO {
         logger.info("doReadSession start.");
         SystemSession systemSession = systemSessionMapper.selectByPrimaryKey(sessionId.toString());
 
-        logger.info("systemSession :" + systemSession);
+        logger.info("doReadSession systemSession :" + systemSession);
 
         if(systemSession == null) {
             logger.info("doReadSession end.");

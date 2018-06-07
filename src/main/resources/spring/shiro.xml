@@ -91,7 +91,7 @@
     </bean>
 
     <!--mysql session 存储的实现-->
-    <bean id="mySqlSessionDAO" class="com.mine.shiro.session.MySqlSessionDao" >
+    <bean id="mySqlSessionDAO" class="com.mine.shiro.session.MySqlSessionDao" lazy-init="false">
         <!--对应ehCache name="shiro-activeSessionCache"-->
         <property name="activeSessionsCacheName" value="shiro-activeSessionCache" />
 
@@ -99,9 +99,25 @@
         <property name="sessionIdGenerator" >
             <bean class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator" />
         </property>
+
+        <property name="excludeUrls">
+            <list>
+                <value>.*\.js</value>
+                <value>.*\.css</value>
+                <value>.*\.jpg</value>
+                <value>.*\.png</value>
+                <value>.*\.gif</value>
+                <value>.*\.jpeg</value>
+                <value>.*\.jpe</value>
+                <value>.*\.jfif</value>
+                <value>.*\.bmp</value>
+                <value>.*\.tif</value>
+            </list>
+        </property>
     </bean>
 
-    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+    <!-- msyql 版本 为处理 session 过期的事 -->
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager" lazy-init="false">
         <property name="sessionIdCookie" ref="sessionIdCookie" />
         <property name="sessionIdCookieEnabled" value="true" />
         <property name="sessionListeners">
@@ -111,6 +127,22 @@
         </property>
         <property name="sessionDAO" ref="mySqlSessionDAO"/>
     </bean>
+
+    <bean id="mcSessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <property name="sessionIdCookie" ref="sessionIdCookie" />
+        <property name="sessionIdCookieEnabled" value="true" />
+        <!--关闭 session 清理-->
+        <property name="sessionValidationSchedulerEnabled" value="false" />
+        <property name="sessionListeners">
+            <list>
+                <ref bean="mySessionListener" />
+            </list>
+        </property>
+        <property name="globalSessionTimeout" value="60000"/>
+        <property name="sessionDAO" ref="memcachedSessionDao"/>
+    </bean>
+
+
 
 
     <!-- 凭证匹配器 -->
@@ -153,10 +185,12 @@
 
         <!--
             加入缓存机制
+            如果应用 memcached 就不用 cacheManager
         -->
-        <property name="cacheManager" ref="cacheManager"/>
+        <!--<property name="cacheManager" ref="cacheManager"/>-->
 
-        <property name="sessionManager" ref="sessionManager" />
+        <!--<property name="sessionManager" ref="sessionManager" />-->
+        <property name="sessionManager" ref="mcSessionManager" />
 
         <property name="rememberMeManager" ref="rememberMeManager" />
 

@@ -29,6 +29,11 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
+    <listener>
+        <description>随时对地通过((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest()获取当前request</description>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
+
     <servlet>
         <servlet-name>dispatcherServlet</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
