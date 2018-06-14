@@ -18,6 +18,12 @@
 
         <property name="unauthorizedUrl" value="/login"/>
 
+        <property name="filters">
+           <map>
+               <entry key="noSessionReadFilter" value-ref="noSessionReadFilter" />
+           </map>
+        </property>
+
         <!-- 具体配置需要拦截哪些 URL, 以及访问对应的 URL 时使用 Shiro 的什么 Filter 进行拦截.
           /index.jsp=anon
                 /jsp/success.jsp=anon
@@ -36,14 +42,16 @@
             -->
 
             <value>
-                /favicon.ico = anon
+                /favicon.ico=anon
                 /statics/**=anon
                 /login=authc
-                /logout = logout
+                /logout=logout
                 /**=user
             </value>
         </property>
     </bean>
+
+    <bean id="noSessionReadFilter" class="com.mine.shiro.filter.NoSessionReadFilter" />
 
     <!-- 会话Cookie模板 -->
     <!-- sessionId cookie 关闭浏览器 过期-->
@@ -91,7 +99,7 @@
     </bean>
 
     <!--mysql session 存储的实现-->
-    <bean id="mySqlSessionDAO" class="com.mine.shiro.session.MySqlSessionDao" lazy-init="false">
+    <bean id="mySqlSessionDAO" class="com.mine.shiro.session.dao.MySqlSessionDao" lazy-init="false">
         <!--对应ehCache name="shiro-activeSessionCache"-->
         <property name="activeSessionsCacheName" value="shiro-activeSessionCache" />
 
@@ -128,6 +136,23 @@
         <property name="sessionDAO" ref="mySqlSessionDAO"/>
     </bean>
 
+    <bean id="memcachedSessionDao" class="com.mine.shiro.session.dao.MemcachedSessionDao" >
+        <property name="excludeUrls">
+            <list>
+                <value>.*\.js</value>
+                <value>.*\.css</value>
+                <value>.*\.jpg</value>
+                <value>.*\.png</value>
+                <value>.*\.gif</value>
+                <value>.*\.jpeg</value>
+                <value>.*\.jpe</value>
+                <value>.*\.jfif</value>
+                <value>.*\.bmp</value>
+                <value>.*\.tif</value>
+            </list>
+        </property>
+    </bean>
+
     <bean id="mcSessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
         <property name="sessionIdCookie" ref="sessionIdCookie" />
         <property name="sessionIdCookieEnabled" value="true" />
@@ -138,11 +163,28 @@
                 <ref bean="mySessionListener" />
             </list>
         </property>
-        <property name="globalSessionTimeout" value="60000"/>
         <property name="sessionDAO" ref="memcachedSessionDao"/>
     </bean>
 
+    <bean id="mcCustomSessionManager" class="com.mine.shiro.session.manager.CustomWebSessionManager" lazy-init="false">
+        <property name="sessionIdCookie" ref="sessionIdCookie" />
+        <property name="sessionIdCookieEnabled" value="true" />
+        <!--关闭 session 清理-->
+        <property name="sessionValidationSchedulerEnabled" value="false" />
+        <property name="sessionListeners">
+            <list>
+                <ref bean="mySessionListener" />
+            </list>
+        </property>
+        <property name="sessionDAO" ref="memcachedSessionDao"/>
 
+        <!--不读取session的url-->
+        <property name="excludeNoReadSessionPaths">
+            <set>
+                <value>/statics/**</value>
+            </set>
+        </property>
+    </bean>
 
 
     <!-- 凭证匹配器 -->
@@ -190,7 +232,7 @@
         <!--<property name="cacheManager" ref="cacheManager"/>-->
 
         <!--<property name="sessionManager" ref="sessionManager" />-->
-        <property name="sessionManager" ref="mcSessionManager" />
+        <property name="sessionManager" ref="mcCustomSessionManager" />
 
         <property name="rememberMeManager" ref="rememberMeManager" />
 
@@ -202,7 +244,6 @@
         <property name="usernameParam" value="username"/>
         <property name="passwordParam" value="password"/>
         <property name="rememberMeParam" value="rememberMe"/>
-
     </bean>
 
 

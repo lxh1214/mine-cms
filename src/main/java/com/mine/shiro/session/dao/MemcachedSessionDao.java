@@ -1,11 +1,11 @@
-package com.mine.shiro;
+package com.mine.shiro.session.dao;
 
-import com.mine.shiro.session.CustomAbstractSessionDAO;
+import com.mine.core.Servlets;
+import com.mine.shiro.filter.NoSessionReadFilter;
+import com.mine.shiro.session.dao.CustomAbstractSessionDAO;
 import net.rubyeye.xmemcached.MemcachedClient;
 import net.rubyeye.xmemcached.exception.MemcachedException;
 import org.apache.shiro.session.Session;
-import org.apache.shiro.session.UnknownSessionException;
-import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +31,15 @@ public class MemcachedSessionDao extends CustomAbstractSessionDAO {
     @Autowired
     MemcachedClient memcachedClient;
 
-    private int expireTime;
+    public static final int DEFAULT_SESSION_TIMEOUT = 30 * 60;
 
-    public void setExpireTime(int expireTime) {
-        this.expireTime = expireTime;
+    /**
+     * 设置默认超时时间
+     */
+    private int sessionExpireTime = DEFAULT_SESSION_TIMEOUT;
+
+    public void setSessionExpireTime(int sessionExpireTime) {
+        this.sessionExpireTime = sessionExpireTime;
     }
 
     protected Serializable doCreate(Session session) {
@@ -42,10 +47,9 @@ public class MemcachedSessionDao extends CustomAbstractSessionDAO {
         Serializable sessionId = generateSessionId(session);
         assignSessionId(session, sessionId);
 
-        logger.info("session timeout : " + session.getTimeout());
-
+        logger.info("doCreate session timeout : {}, doCreate uri : {}", session.getTimeout(),obtainUri());
         try {
-            memcachedClient.set(sessionId.toString(), expireTime, session);
+            memcachedClient.set(sessionId.toString(), sessionExpireTime , session);
         } catch (TimeoutException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -58,8 +62,11 @@ public class MemcachedSessionDao extends CustomAbstractSessionDAO {
 
     protected Session doReadSession(Serializable sessionId) {
         Session session = null;
+
+
         try {
-             session = memcachedClient.get(sessionId.toString());
+            session = memcachedClient.get(sessionId.toString());
+            logger.info("doReadSession uri : {}, session timeout : {}" , new Object[]{obtainUri(), session.getTimeout()} );
         } catch (TimeoutException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -67,13 +74,15 @@ public class MemcachedSessionDao extends CustomAbstractSessionDAO {
         } catch (MemcachedException e) {
             e.printStackTrace();
         }
+
         return session;
     }
 
 
     protected void doUpdate(Session session) {
+        logger.info("doUpdate uri :" + obtainUri());
         try {
-            memcachedClient.set(session.getId().toString(), expireTime, session);
+            memcachedClient.set(session.getId().toString(), sessionExpireTime, session);
         } catch (TimeoutException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -84,6 +93,7 @@ public class MemcachedSessionDao extends CustomAbstractSessionDAO {
     }
 
     public void delete(Session session) {
+        logger.info("delete uri :" + obtainUri());
         try {
             memcachedClient.delete(session.getId().toString());
         } catch (TimeoutException e) {
@@ -103,6 +113,7 @@ public class MemcachedSessionDao extends CustomAbstractSessionDAO {
      * @return
      */
     public Collection<Session> getActiveSessions() {
+        logger.info("getActiveSessions");
         return Collections.emptyList();
     }
 

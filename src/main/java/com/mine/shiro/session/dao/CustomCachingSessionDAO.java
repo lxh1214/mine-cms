@@ -1,26 +1,22 @@
-package com.mine.shiro.session;
+package com.mine.shiro.session.dao;
 
 import com.mine.core.Servlets;
 import org.apache.shiro.session.Session;
-import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.session.mgt.ValidatingSession;
-import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;
+import org.apache.shiro.session.mgt.eis.CachingSessionDAO;
+
+import java.io.Serializable;
 
 /**
- * Created by liuxianhu on 2018/6/7.
- *
- * 增加一个 excludeUpdate session
- * 满足 excludeUrls的不更新 session
- * excludeUpdate 只适用于 spring  web 环境
- *
- *
+ * 继承 CachingSessionDAO
+ * 主要用到 update,delete,  session
  */
-public abstract class CustomAbstractSessionDAO extends AbstractSessionDAO {
+public class CustomCachingSessionDAO extends CachingSessionDAO {
 
     /**
      * 排除的更新 session Url
      */
-    private String[] excludeUrls;
+    private String[] excludeUrls = new String[]{};
 
 
     public void setExcludeUrls(String[] excludeUrls) {
@@ -56,19 +52,19 @@ public abstract class CustomAbstractSessionDAO extends AbstractSessionDAO {
         return Servlets.getRequest().getRequestURI().toLowerCase();
     }
 
-    public void update(Session session) throws UnknownSessionException {
-
-        boolean isExclude = excludeUpdate(session);
-
-        if(!isExclude) {
-            doUpdate(session);
-        }
+    protected void doUpdate(Session session) {
 
     }
 
-    /**
-     * 需要具体的实现
-     * @param session
-     */
-    protected abstract void doUpdate(Session session);
+    protected void doDelete(Session session) {
+
+    }
+
+    protected Serializable doCreate(Session session) {
+        return null;
+    }
+
+    protected Session doReadSession(Serializable sessionId) {
+        return null;
+    }
 }

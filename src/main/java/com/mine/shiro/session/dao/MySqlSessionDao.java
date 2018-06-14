@@ -1,8 +1,9 @@
-package com.mine.shiro.session;
+package com.mine.shiro.session.dao;
 
 import com.mine.core.Servlets;
 import com.mine.dao.SystemSessionMapper;
 import com.mine.model.SystemSession;
+import com.mine.shiro.session.SerializableUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.ValidatingSession;
 import org.apache.shiro.session.mgt.eis.CachingSessionDAO;
