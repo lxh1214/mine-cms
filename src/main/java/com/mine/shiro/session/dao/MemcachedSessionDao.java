@@ -31,7 +31,7 @@ public class MemcachedSessionDao extends CustomAbstractSessionDAO {
     @Autowired
     MemcachedClient memcachedClient;
 
-    public static final int DEFAULT_SESSION_TIMEOUT = 30 * 60;
+    public static final int DEFAULT_SESSION_TIMEOUT = 60 * 60;
 
     /**
      * 设置默认超时时间
@@ -47,7 +47,7 @@ public class MemcachedSessionDao extends CustomAbstractSessionDAO {
         Serializable sessionId = generateSessionId(session);
         assignSessionId(session, sessionId);
 
-        logger.info("doCreate session timeout : {}, doCreate uri : {}", session.getTimeout(),obtainUri());
+        logger.info("doCreate session timeout : {}, doCreate uri : {}, sessionId.toString {}", session.getTimeout(),obtainUri(), sessionId.toString());
         try {
             memcachedClient.set(sessionId.toString(), sessionExpireTime , session);
         } catch (TimeoutException e) {
@@ -63,10 +63,9 @@ public class MemcachedSessionDao extends CustomAbstractSessionDAO {
     protected Session doReadSession(Serializable sessionId) {
         Session session = null;
 
-
         try {
             session = memcachedClient.get(sessionId.toString());
-            logger.info("doReadSession uri : {}, session timeout : {}" , new Object[]{obtainUri(), session.getTimeout()} );
+            logger.info("doReadSession uri : {}, sessionId : {}, session : {}" , new Object[]{obtainUri(), sessionId, session} );
         } catch (TimeoutException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

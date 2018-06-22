@@ -177,7 +177,6 @@
             </list>
         </property>
         <property name="sessionDAO" ref="memcachedSessionDao"/>
-
         <!--不读取session的url-->
         <property name="excludeNoReadSessionPaths">
             <set>

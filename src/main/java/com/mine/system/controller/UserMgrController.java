@@ -15,4 +15,9 @@ public class UserMgrController {
         return "success";
     }
 
+    @RequestMapping("/index")
+    public String index() {
+        return "success";
+    }
+
 }
